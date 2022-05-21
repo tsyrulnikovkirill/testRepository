@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:\Users\kirill\Desktop\route.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="125"/><column_width id="3" width="2971"/><column_width id="4" width="0"/><expanded_item id="1" parent="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,6:maindriver"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="driver" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="87"/><column index="2" value="114"/><column index="3" value="90"/><column index="4" value="90"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="route" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort><column index="1" mode="0"/></sort><column_widths><column index="1" value="116"/><column index="2" value="94"/><column index="3" value="137"/><column index="4" value="110"/><column index="5" value="193"/><column index="6" value="83"/><column index="7" value="99"/><column index="8" value="97"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats><column index="6" value=""/></display_formats><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="transport" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="117"/><column index="2" value="114"/><column index="3" value="81"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">/*
+INSERT INTO route(departure, arrival, distance, date_dep, date_arr)
+VALUES
+	('Хабаровск', 'Комсомольск-на-Амуре', 983, 20030204, 20030205),
+	('Магадан', 'Хабаровск', 1934, 20030101, 20030304),
+	('Артём', 'Хабаровск', 750, 20030409, 20030414),
+	('Владивосток', 'Хабаровск', 749, 20040708, 20040807),
+	('Хабаровск', 'Владивосток', 749, 20031105, 20031107),
+	('Якутск', 'Хабаровск', 2381, 20031029, 20031102);
+	*/
+	
+/*	
+INSERT INTO driver(name, categorie)
+VALUES
+	('Гамбург Э.А.', 'C'),
+	('Сурина Т.А.', 'B'),
+	('Коротаев С.Е.', 'C');
+	
+INSERT INTO transport(number_car, tonnage)
+VALUES
+	('F123RE', 100),
+	('O012UQ', 150),
+	('J789ON', 125),
+	('T639EC', 100);
+	*/
+	
+</sql><sql name="SQL 2">--количество расстояния на каждого водителя
+SELECT d.name AS Имя_Водителя, SUM(distance) AS Общее_Растояние
+FROM route r
+	JOIN driver d USING(driver_id)
+GROUP BY d.name
+ORDER BY 2 DESC;
+
+--сопоставление машины и водителя
+SELECT t.number_car AS Номер_Машины, d.name AS Водитель
+FROM transport t 
+	JOIN route USING(transport_id)
+	JOIN driver d USING(driver_id)
+ORDER BY Номер_Машины;
+
+--машина, которая не используется
+SELECT number_car 
+FROM transport
+WHERE transport_id NOT IN(
+							SELECT DISTINCT transport_id 
+							FROM route 
+						);</sql><current_tab id="1"/></tab_sql></sqlb_project>
